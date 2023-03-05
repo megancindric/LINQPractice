@@ -26,11 +26,11 @@ namespace DatabaseFirstLINQ
             ProblemNine();
             ProblemTen();
             //ProblemEleven();
-            //ProblemTwelve();
-            //ProblemThirteen();
-            //ProblemFourteen();
-            //ProblemFifteen();
-            //ProblemSixteen();
+            ProblemTwelve();
+            ProblemThirteen();
+            ProblemFourteen();
+            ProblemFifteen();
+            ProblemSixteen();
             //ProblemSeventeen();
             //ProblemEighteen();
             //ProblemNineteen();
@@ -176,19 +176,59 @@ namespace DatabaseFirstLINQ
             // Create a new User object and add that user to the Users table using LINQ.
             Console.WriteLine("\n========== Problem Eleven: New User Creation ==========\n");
 
+            Console.WriteLine("Create new user? (y/n)");
+            var userChoice = Console.ReadLine().ToLower();
+
+            if (userChoice == "y")
+            {
+            Console.WriteLine("Please enter new user email: ");
+            //"david@gmail.com"
+            var email = Console.ReadLine();
+            //"DavidsPass123"
+            Console.WriteLine("Please enter new user password: ");
+
+            var pass = Console.ReadLine();
+
             User newUser = new User()
             {
-                Email = "david@gmail.com",
-                Password = "DavidsPass123"
+                Email = email,
+                Password = pass
             };
             _context.Users.Add(newUser);
             _context.SaveChanges();
+            }
+            else { Console.WriteLine("User Creation Bypassed"); }
+            
         }
 
         private void ProblemTwelve()
         {
             // Create a new Product object and add that product to the Products table using LINQ.
             Console.WriteLine("\n========== Problem Twelve: New Product Creation ==========\n");
+
+            Console.WriteLine("Create new product? (y/n)");
+            var userChoice = Console.ReadLine().ToLower();
+
+            if (userChoice == "y")
+            {
+                Console.WriteLine("Please enter new product name: ");
+                var name = Console.ReadLine();
+                Console.WriteLine("Please enter new product description: ");
+                var description = Console.ReadLine();
+                Console.WriteLine("Please enter new product price: ");
+                var price = Convert.ToDecimal(Console.ReadLine());
+
+                Product newProduct = new Product()
+                {
+                    Name = name,
+                    Description = description,
+                    Price = price
+                };
+                _context.Products.Add(newProduct);
+                _context.SaveChanges();
+                Console.WriteLine($"Successfully added new product {newProduct.Name}!");
+            }
+            else { Console.WriteLine("User Creation Bypassed"); }
 
         }
 
@@ -213,6 +253,17 @@ namespace DatabaseFirstLINQ
             // Add the product you create to the user we created in the ShoppingCart junction table using LINQ.
             Console.WriteLine("\n========== Problem Fourteen: Adding Product to Shopping Cart ==========\n");
 
+            var userId = _context.Users.Where(u => u.Email == "david@gmail.com").Select(u => u.Id).SingleOrDefault();
+            var productId = _context.Products.Where(p => p.Id == 8).Select(p => p.Id).SingleOrDefault();
+
+            ShoppingCart newCart = new ShoppingCart()
+            {
+                UserId = userId,
+                ProductId = productId,
+                Quantity = 10
+            };
+            _context.ShoppingCarts.Add(newCart);
+            _context.SaveChanges();
         }
 
         // <><> U Actions (Update) <><>
@@ -232,6 +283,13 @@ namespace DatabaseFirstLINQ
         {
             // Update the price of the product you created to something different using LINQ.
             Console.WriteLine("\n========== Problem Sixteen: Product Price Update ==========\n");
+
+            var product = _context.Products.Where(p => p.Id == 8).SingleOrDefault();
+            Console.WriteLine($"Please enter a new price for {product.Name}: ");
+            var newPrice = Convert.ToDecimal(Console.ReadLine());
+            product.Price = newPrice;
+            _context.Products.Update(product); 
+            _context.SaveChanges();  
 
         }
 
